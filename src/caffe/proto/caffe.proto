@@ -260,7 +260,7 @@ message ParamSpec {
 // NOTE
 // Update the next available ID when you add a new LayerParameter field.
 //
-// LayerParameter next available layer-specific ID: 135 (last added: recurrent_param)
+// LayerParameter next available layer-specific ID: 142 (last added: repmat_param)
 message LayerParameter {
   optional string name = 1; // the layer name
   optional string type = 2; // the layer type
@@ -308,6 +308,7 @@ message LayerParameter {
   optional ConcatParameter concat_param = 104;
   optional ContrastiveLossParameter contrastive_loss_param = 105;
   optional ConvolutionParameter convolution_param = 106;
+  optional ConvolutionDeeplabParameter convolution_deeplab_param = 135;
   optional DataParameter data_param = 107;
   optional DropoutParameter dropout_param = 108;
   optional DummyDataParameter dummy_data_param = 109;
@@ -318,9 +319,12 @@ message LayerParameter {
   optional HDF5OutputParameter hdf5_output_param = 113;
   optional HingeLossParameter hinge_loss_param = 114;
   optional ImageDataParameter image_data_param = 115;
+  optional ImageSegDataParameter image_seg_data_param = 140;
   optional InfogainLossParameter infogain_loss_param = 116;
   optional InnerProductParameter inner_product_param = 117;
+  optional InterpParameter interp_param = 139;
   optional LRNParameter lrn_param = 118;
+  optional MaskParameter mask_param = 138;
   optional MemoryDataParameter memory_data_param = 119;
   optional MVNParameter mvn_param = 120;
   optional PoolingParameter pooling_param = 121;
@@ -329,13 +333,95 @@ message LayerParameter {
   optional PythonParameter python_param = 130;
   optional RecurrentParameter recurrent_param = 134;
   optional ReLUParameter relu_param = 123;
+  optional RepMatParameter repmat_param = 141;
   optional ReshapeParameter reshape_param = 133;
+  optional SegAccuracyParameter seg_accuracy_param = 137;
   optional SigmoidParameter sigmoid_param = 124;
   optional SoftmaxParameter softmax_param = 125;
   optional SliceParameter slice_param = 126;
   optional TanHParameter tanh_param = 127;
   optional ThresholdParameter threshold_param = 128;
+  optional TransposeParameter transpose_param = 136;
   optional WindowDataParameter window_data_param = 129;
+}
+
+message RepMatParameter {
+  optional uint32 rep_w = 1 [default = 1];
+  optional uint32 rep_h = 2 [default = 1];
+  optional uint32 rep_c = 3 [default = 1];
+  optional uint32 rep_n = 4 [default = 1];
+
+}
+
+//message that stores parameters that will be used by image_seg_data_layer
+message ImageSegDataParameter {
+  optional ImageDataParameter image_data_param = 1;
+  optional TransformationParameter transform_param = 2;
+}
+
+// Message that stores parameters used by InterpLayer
+message InterpParameter {
+  optional int32 height = 1 [default = 0]; // Height of output
+  optional int32 width = 2 [default = 0]; // Width of output
+  optional int32 zoom_factor = 3 [default = 1]; // zoom factor
+  optional int32 shrink_factor = 4 [default = 1]; // shrink factor
+  optional int32 pad_beg = 5 [default = 0]; // padding at begin of input
+  optional int32 pad_end = 6 [default = 0]; // padding at end of input
+}
+
+message MaskParameter {
+  optional uint32 width = 1;
+  optional uint32 height = 2;
+}
+
+// Message that stores parametres used by SegAccuracyLayer
+message SegAccuracyParameter {
+  enum AccuracyMetric {
+    PixelAccuracy = 0;
+    ClassAccuracy = 1;
+    PixelIOU = 2;
+  }
+  optional AccuracyMetric metric = 1 [default = PixelAccuracy];
+  // will ignore pixels with this value when computing accuracy
+  repeated int32 ignore_label = 2;
+}
+
+message TransposeParameter {
+  optional BlobShape shape = 1;
+  enum TransposeType {
+    CONVTOLSTM = 0;
+    LSTMTOCONV = 1;
+  }
+  required TransposeType transposetype = 2;
+}
+
+// Message that stores parameters used by ConvolutionLayer
+message ConvolutionDeeplabParameter {
+  optional uint32 num_output = 1; // The number of outputs for the layer
+  optional bool bias_term = 2 [default = true]; // whether to have bias terms
+  // Pad, kernel size, and stride are all given as a single value for equal
+  // dimensions in height and width or as Y, X pairs.
+  optional uint32 pad = 3 [default = 0]; // The padding size (equal in Y, X)
+  optional uint32 pad_h = 9 [default = 0]; // The padding height
+  optional uint32 pad_w = 10 [default = 0]; // The padding width
+  optional uint32 kernel_size = 4; // The kernel size (square)
+  optional uint32 kernel_h = 11; // The kernel height
+  optional uint32 kernel_w = 12; // The kernel width
+  optional uint32 group = 5 [default = 1]; // The group size for group conv
+  optional uint32 stride = 6 [default = 1]; // The stride (equal in Y, X)
+  optional uint32 stride_h = 13; // The stride height
+  optional uint32 stride_w = 14; // The stride width
+  optional uint32 hole = 17 [default = 1]; // The filter stride (equal in Y, X)
+  optional uint32 hole_h = 18 [default = 1]; // The filter stride height
+  optional uint32 hole_w = 19 [default = 1]; // The filter stride width
+  optional FillerParameter weight_filler = 7; // The filler for the weight
+  optional FillerParameter bias_filler = 8; // The filler for the bias
+  enum Engine {
+    DEFAULT = 0;
+    CAFFE = 1;
+    CUDNN = 2;
+  }
+  optional Engine engine = 15 [default = DEFAULT];
 }
 
 // Message that stores parameters used to apply transformation
@@ -593,6 +679,13 @@ message ImageDataParameter {
   optional uint32 min_width = 14 [default = 0];
   // Specify if the images are color or gray
   optional bool is_color = 11 [default = true];
+  optional int32 ignore_label = 15 [default = 255];
+  enum LabelType {
+    NONE = 0;
+    IMAGE = 1;
+    PIXEL = 2;
+  }
+  optional LabelType label_type = 16 [default = IMAGE];
   // DEPRECATED. See TransformationParameter. For data pre-processing, we can do
   // simple scaling and subtracting the data mean, if provided. Note that the
   // mean subtraction is always carried out before scaling.

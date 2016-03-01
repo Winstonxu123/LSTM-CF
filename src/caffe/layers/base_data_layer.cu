@@ -23,6 +23,38 @@ void BasePrefetchingDataLayer<Dtype>::Forward_gpu(
   CreatePrefetchThread();
 }
 
+template <typename Dtype>
+void ImageDimPrefetchingDataLayer<Dtype>::Forward_gpu(
+    const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
+  /*
+  // First, join the thread
+  //BasePrefetchingDataLayer<Dtype>::JoinPrefetchThread();
+  this->StopInternalThread();
+  // Copy the data
+  caffe_copy(this->prefetch_[0].data_.count(), this->prefetch_[0].data_.cpu_data(),
+       top[0]->mutable_gpu_data());
+  if (this->output_labels_) {
+    caffe_copy(this->prefetch_[0].label_.count(), this->prefetch_[0].label_.cpu_data(),
+         top[1]->mutable_gpu_data());
+  }
+  if (output_data_dim_) {
+    caffe_copy(prefetch_data_dim_.count(), prefetch_data_dim_.cpu_data(),
+         top[2]->mutable_gpu_data());
+  }
+
+  // Start a new prefetch thread
+  //BasePrefetchingDataLayer<Dtype>::CreatePrefetchThread();
+  this->StartInternalThread();*/
+
+  BasePrefetchingDataLayer<Dtype>::Forward_gpu(bottom, top);
+  if (output_data_dim_) {
+    caffe_copy(prefetch_data_dim_.count(), prefetch_data_dim_.cpu_data(),
+         top[2]->mutable_cpu_data());
+  }
+}
+
+
 INSTANTIATE_LAYER_GPU_FORWARD(BasePrefetchingDataLayer);
+INSTANTIATE_LAYER_GPU_FORWARD(ImageDimPrefetchingDataLayer);
 
 }  // namespace caffe
