@@ -173,6 +173,8 @@ void ImageSegDataLayer<Dtype>::InternalThreadEntry() {
     cv_img_seg.push_back(ReadImageToCVMat(root_folder + lines_[lines_id_].first,
 	  new_height, new_width, is_color));
 
+    //LOG(INFO) << "load img: " << lines_[lines_id_].first;
+
     top_data_dim[top_data_dim_offset]     = max_height; //static_cast<Dtype>(std::min(max_height, img_row));
     top_data_dim[top_data_dim_offset + 1] = max_width; //static_cast<Dtype>(std::min(max_width, img_col));
 
