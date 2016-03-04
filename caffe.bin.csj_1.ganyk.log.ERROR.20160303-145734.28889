@@ -1,0 +1,4 @@
+Log file created at: 2016/03/03 14:57:34
+Running on machine: csj_1
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+E0303 14:57:34.587005 28889 upgrade_proto.cpp:618] Attempting to upgrade input file specified using deprecated V1LayerParameter: ../deeplab-public-master/deeplab-public-master/models/caffe_deeplab_train_iter_100000.caffemodel

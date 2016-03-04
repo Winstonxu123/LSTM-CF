@@ -370,8 +370,20 @@ message InterpParameter {
 }
 
 message MaskParameter {
-  optional uint32 width = 1;
-  optional uint32 height = 2;
+  required uint32 width = 1;
+  required uint32 height = 2;
+  enum MaskType {
+    VERTICAL = 0;
+    HORIZONTAL = 1;
+  }
+  enum Direction {
+    LEFT2RIGHT = 0;
+    RIGHT2LEFT = 1;
+    TOP2BOTTOM = 2;
+    BOTTOM2TOP = 3;
+  }
+  optional MaskType masktype = 3 [default = VERTICAL];
+  optional Direction direction = 4 [default = TOP2BOTTOM];
 }
 
 // Message that stores parametres used by SegAccuracyLayer
