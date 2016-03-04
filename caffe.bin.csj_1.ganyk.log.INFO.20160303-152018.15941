@@ -1,5 +1,0 @@
-Log file created at: 2016/03/03 15:20:18
-Running on machine: csj_1
-Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
-I0303 15:20:18.182279 15941 caffe.cpp:147] Use GPU with device ID 1
-F0303 15:20:18.534126 15941 upgrade_proto.cpp:928] Check failed: ReadProtoFromTextFile(param_file, param) Failed to parse NetParameter file: ../deeplab-public-master/deeplab-public-master/models/vgg/deeplab.prototxt
