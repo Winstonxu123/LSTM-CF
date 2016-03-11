@@ -645,24 +645,50 @@ layer {
 #####  Mask layers ######
 
 layer {
-  name: "mask_54_54_vertical"
+  name: "mask_54_54_vertical_1"
   type: "Mask"
-  top: "mask_54_54_vertical"
+  top: "mask_54_54_vertical_1"
   mask_param {
     width: 54
     height: 54
     masktype: VERTICAL
+    direction: TOP2BOTTOM
   }
 }
 
 layer {
-  name: "mask_54_54_horizontal"
+  name: "mask_54_54_vertical_2"
   type: "Mask"
-  top: "mask_54_54_horizontal"
+  top: "mask_54_54_vertical_2"
+  mask_param {
+    width: 54
+    height: 54
+    masktype: VERTICAL
+    direction: BOTTOM2TOP
+  }
+}
+
+layer {
+  name: "mask_54_54_horizontal_1"
+  type: "Mask"
+  top: "mask_54_54_horizontal_1"
   mask_param {
     width: 54
     height: 54
     masktype: HORIZONTAL
+    direction: LEFT2RIGHT
+  }
+}
+
+layer {
+  name: "mask_54_54_horizontal_2"
+  type: "Mask"
+  top: "mask_54_54_horizontal_2"
+  mask_param {
+    width: 54
+    height: 54
+    masktype: HORIZONTAL
+    direction: RIGHT2LEFT
   }
 }
 
@@ -831,8 +857,29 @@ layer {
   name: "HHA_lstm1"
   type: "LSTM"
   bottom: "HHA_pool3_trans"
-  bottom: "mask_54_54_vertical"
+  bottom: "mask_54_54_vertical_1"
   top: "HHA_lstm1"
+  recurrent_param {
+    num_output: 100
+    weight_filler {
+      type: "uniform"
+      min: -0.01
+      max: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+
+# from bottom to top using lstm each column
+layer {
+  name: "HHA_lstm2"
+  type: "LSTM"
+  bottom: "HHA_pool3_trans"
+  bottom: "mask_54_54_vertical_2"
+  top: "HHA_lstm2"
   recurrent_param {
     num_output: 100
     weight_filler {
@@ -878,6 +925,48 @@ layer {
   }
 }
 
+layer {
+  name: "HHA_lstm2_reshape"
+  type: "Reshape"
+  bottom: "HHA_lstm2"
+  top: "HHA_lstm2_reshape"
+  reshape_param{
+    shape{
+      dim: 1 
+      dim: 100
+      dim: 54
+      dim: 54
+    }
+  }
+}
+
+layer {
+  bottom: "HHA_lstm2_reshape"
+  name: "HHA_lstm2_trans"
+  type: "Transpose"
+  top: "HHA_lstm2_trans"
+  transpose_param{
+    transposetype: LSTMTOCONV
+    shape {
+      dim: 1
+      dim: 100
+      dim: 54
+      dim: 54
+    }
+  }
+}
+
+layer {
+  name: "HHA_global"
+  type: "Concat"
+  bottom: "HHA_lstm1_trans"
+  bottom: "HHA_lstm2_trans"
+  top: "HHA_global"
+  concat_param {
+    axis: 1
+  }
+}
+
 
 ##### LSTM for RGB ########
 layer {
@@ -900,8 +989,29 @@ layer {
   name: "RGB_lstm1"
   type: "LSTM"
   bottom: "RGB_feature_trans"
-  bottom: "mask_54_54_vertical"
+  bottom: "mask_54_54_vertical_1"
   top: "RGB_lstm1"
+  recurrent_param {
+    num_output: 100
+    weight_filler {
+      type: "uniform"
+      min: -0.01
+      max: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+
+# from bottom to top using lstm each column
+layer {
+  name: "RGB_lstm2"
+  type: "LSTM"
+  bottom: "RGB_feature_trans"
+  bottom: "mask_54_54_vertical_2"
+  top: "RGB_lstm2"
   recurrent_param {
     num_output: 100
     weight_filler {
@@ -947,12 +1057,54 @@ layer {
   }
 }
 
+layer {
+  name: "RGB_lstm2_reshape"
+  type: "Reshape"
+  bottom: "RGB_lstm2"
+  top: "RGB_lstm2_reshape"
+  reshape_param{
+    shape{
+      dim: 1 
+      dim: 100
+      dim: 54
+      dim: 54
+    }
+  }
+}
+
+layer {
+  bottom: "RGB_lstm2_reshape"
+  name: "RGB_lstm2_trans"
+  type: "Transpose"
+  top: "RGB_lstm2_trans"
+  transpose_param{
+    transposetype: LSTMTOCONV
+    shape {
+      dim: 1
+      dim: 100
+      dim: 54
+      dim: 54
+    }
+  }
+}
+
+layer {
+  name: "RGB_global"
+  type: "Concat"
+  bottom: "RGB_lstm1_trans"
+  bottom: "RGB_lstm2_trans"
+  top: "RGB_global"
+  concat_param {
+    axis: 1
+  }
+}
+
 # concat RGB_global and HHA_global
 layer {
   name: "RGB_HHA_global"
   type: "Concat"
-  bottom: "RGB_lstm1_trans"
-  bottom: "HHA_lstm1_trans"
+  bottom: "RGB_global"
+  bottom: "HHA_global"
   top: "RGB_HHA_global"
   concat_param {
     axis: 1
@@ -969,17 +1121,39 @@ layer {
     shape {
       dim: 54
       dim: 54
-      dim: 200
+      dim: 400
     }
   }
 }
 
+#from left to right using lstm each row
 layer {
-  name: "global"
+  name: "global1"
   type: "LSTM"
   bottom: "RGB_HHA_global_trans"
-  bottom: "mask_54_54_horizontal"
-  top: "global"
+  bottom: "mask_54_54_horizontal_1"
+  top: "global1"
+  recurrent_param {
+    num_output: 100
+    weight_filler {
+      type: "uniform"
+      min: -0.01
+      max: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+
+#from right to left using lstm each row
+layer {
+  name: "global2"
+  type: "LSTM"
+  bottom: "RGB_HHA_global_trans"
+  bottom: "mask_54_54_horizontal_2"
+  top: "global2"
   recurrent_param {
     num_output: 100
     weight_filler {
@@ -995,10 +1169,10 @@ layer {
 }
 
 layer {
-  name: "global_reshape"
+  name: "global1_reshape"
   type: "Reshape"
-  bottom: "global"
-  top: "global_reshape"
+  bottom: "global1"
+  top: "global1_reshape"
   reshape_param{
     shape{
       dim: 1 
@@ -1010,10 +1184,41 @@ layer {
 }
 
 layer {
-  bottom: "global_reshape"
-  name: "global_trans"
+  bottom: "global1_reshape"
+  name: "global1_trans"
   type: "Transpose"
-  top: "global_trans"
+  top: "global1_trans"
+  transpose_param{
+    transposetype: LSTMTOCONV
+    shape {
+      dim: 1
+      dim: 100
+      dim: 54
+      dim: 54
+    }
+  }
+}
+
+layer {
+  name: "global2_reshape"
+  type: "Reshape"
+  bottom: "global2"
+  top: "global2_reshape"
+  reshape_param{
+    shape{
+      dim: 1 
+      dim: 100
+      dim: 54
+      dim: 54
+    }
+  }
+}
+
+layer {
+  bottom: "global2_reshape"
+  name: "global2_trans"
+  type: "Transpose"
+  top: "global2_trans"
   transpose_param{
     transposetype: LSTMTOCONV
     shape {
@@ -1031,7 +1236,8 @@ layer {
   name: "local_global"
   type: "Concat"
   bottom: "conv7"
-  bottom: "global_trans"
+  bottom: "global1_trans"
+  bottom: "global2_trans"
   top: "local_global"
   concat_param {
     axis: 1

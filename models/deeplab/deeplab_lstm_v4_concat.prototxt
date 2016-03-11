@@ -22,7 +22,7 @@ layer {
   top: "label"
   image_data_param {
     root_folder: "/home/ganyk/"
-    source: "/home/ganyk/SUNRGBD/list_train.txt"
+    source: "/home/ganyk/SUNRGBD/list_train_5.txt"
     label_type: PIXEL
     batch_size: 1
     shuffle: false
@@ -68,7 +68,7 @@ layer {
   #top: "label1"
   image_data_param {
     root_folder: "/home/ganyk/"
-    source: "/home/ganyk/SUNRGBD/HHAList_train.txt"
+    source: "/home/ganyk/SUNRGBD/HHAList_train_5.txt"
     label_type: NONE
     batch_size: 1
     shuffle: false

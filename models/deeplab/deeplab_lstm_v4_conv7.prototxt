@@ -53,7 +53,7 @@ layer {
     mean_value: 116.435
     mean_value: 125.793
     crop_size: 426 # = 53*8 + 2
-    mirror: true
+    mirror: false
   }
   
   include: { phase: TEST }
@@ -100,7 +100,7 @@ layer {
     mean_value: 231.247
     mean_value: 20.523
     crop_size: 426 # = 53*8 
-    mirror: true
+    mirror: false
   }
   
   include: { phase: TEST }
