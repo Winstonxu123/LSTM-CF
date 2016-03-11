@@ -265,12 +265,16 @@ double ConfusionMatrix::accuracy() const {
 
 double ConfusionMatrix::avgPrecision() const {
   double totalPrecision = 0.0;
-  for (size_t i = 0; i < _matrix.size(); i++) {
+  for (size_t i = 1; i < _matrix.size(); i++) {
+    if (colSum(i) == 0)
+    {
+      continue;
+    }
     totalPrecision += (_matrix[i].size() > i) ?
       (double)_matrix[i][i] / (double)colSum(i) : 1.0;
   }
 
-  return totalPrecision /= (double)_matrix.size();
+  return totalPrecision /= (double)(_matrix.size() - 1);
 }
 
 double ConfusionMatrix::avgRecall(const bool strict) const {
@@ -280,8 +284,8 @@ double ConfusionMatrix::avgRecall(const bool strict) const {
     if (_matrix[i].size() > i) {
       const double classSize = (double)rowSum(i);
       if (classSize > 0.0) {
-	totalRecall += (double)_matrix[i][i] / classSize;
-	numClasses += 1;
+      	totalRecall += (double)_matrix[i][i] / classSize;
+      	numClasses += 1;
       }
     }
   }

@@ -95,6 +95,9 @@ class Blob {
     }
     return count;
   }
+
+  void FromMat(const char *fname);
+  void ToMat(const char *fname, bool write_diff = false);
   /**
    * @brief Compute the volume of a slice spanning from a particular first
    *        axis to the final axis.

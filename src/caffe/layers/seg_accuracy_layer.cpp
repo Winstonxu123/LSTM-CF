@@ -38,7 +38,7 @@ void SegAccuracyLayer<Dtype>::Reshape(
   CHECK_EQ(bottom[0]->width(), bottom[1]->width())
     << "The data should have the same width as label.";
  
-  top[0]->Reshape(1, 1, 1, 3);
+  top[0]->Reshape(1, 1, 1, 4);
 }
 
 template <typename Dtype>
@@ -101,8 +101,14 @@ void SegAccuracyLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
   // we report all the resuls
   top[0]->mutable_cpu_data()[0] = (Dtype)confusion_matrix_.accuracy();
   top[0]->mutable_cpu_data()[1] = (Dtype)confusion_matrix_.avgRecall(false);
-  top[0]->mutable_cpu_data()[2] = (Dtype)confusion_matrix_.avgJaccard();
+  top[0]->mutable_cpu_data()[2] = (Dtype)confusion_matrix_.avgPrecision();
+  top[0]->mutable_cpu_data()[3] = (Dtype)confusion_matrix_.avgJaccard();
 
+  //LOG(INFO) << "Pixel accuracy: " << (float)confusion_matrix_.accuracy();
+  //LOG(INFO) << "Class accuracy: " << (float)confusion_matrix_.avgRecall(false);
+  //LOG(INFO) << "      PixelIOU: " << (float)confusion_matrix_.avgJaccard();
+  
+  //confusion_matrix_.clear();
   /*
   Dtype result;
 
