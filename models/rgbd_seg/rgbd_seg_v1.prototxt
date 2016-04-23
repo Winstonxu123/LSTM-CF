@@ -1310,6 +1310,13 @@ layer {
   include: { phase: TRAIN }
 }
 
+layer{
+	name: "prob"
+	type: "Softmax"
+	bottom: "local_global_conv"
+	top: "prob"
+}
+
 layer {
   name: "accuracy"
   type: "SegAccuracy"
