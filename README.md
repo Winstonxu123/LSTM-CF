@@ -1,4 +1,4 @@
-This code is related to our paper "LSTM-CF: Unifying Context Modeling and Fusion with LSTMs for RGB-D Scene Labeling" accepted by ECCV:2016.
+This code is related to our paper \bf{"LSTM-CF: Unifying Context Modeling and Fusion with LSTMs} for RGB-D Scene Labeling" accepted by ECCV2016.
 
 For test example prototxt, please refer to the SUNRGBD/SUNRGBD_test.prototxt
 
