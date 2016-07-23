@@ -265,9 +265,11 @@ double ConfusionMatrix::accuracy() const {
 
 double ConfusionMatrix::avgPrecision() const {
   double totalPrecision = 0.0;
+  int count = 0;
   for (size_t i = 1; i < _matrix.size(); i++) {
     if (colSum(i) == 0)
     {
+      count++;
       continue;
     }
     totalPrecision += (_matrix[i].size() > i) ?
@@ -320,12 +322,20 @@ double ConfusionMatrix::avgJaccard() const {
 
 double ConfusionMatrix::precision(int n) const {
   CHECK(_matrix.size() > (size_t)n);
+  if (colSum(n) == 0)
+  {
+    return 0;
+  }
   return (_matrix[n].size() > (size_t)n) ?
     (double)_matrix[n][n] / (double)colSum(n) : 1.0;
 }
 
 double ConfusionMatrix::recall(int n) const {
   CHECK(_matrix.size() > (size_t)n);
+  if (rowSum(n) == 0)
+  {
+    return 0;
+  }
   return (_matrix[n].size() > (size_t)n) ?
     (double)_matrix[n][n] / (double)rowSum(n) : 0.0;
 }

@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <functional>
+#include <fstream>
 #include <utility>
 #include <vector>
 
@@ -17,10 +18,18 @@ template <typename Dtype>
 void SegAccuracyLayer<Dtype>::LayerSetUp(
   const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
   confusion_matrix_.clear();
+  current_iteration_ = 0;
+  save_freq_ = 0;
   confusion_matrix_.resize(bottom[0]->channels());
   SegAccuracyParameter seg_accuracy_param = this->layer_param_.seg_accuracy_param();
   for (int c = 0; c < seg_accuracy_param.ignore_label_size(); ++c){
     ignore_label_.insert(seg_accuracy_param.ignore_label(c));
+  }
+
+  if (seg_accuracy_param.has_save_frequency())
+  {
+  	save_freq_ = seg_accuracy_param.save_frequency();
+  	file_name_ = seg_accuracy_param.file_name();
   }
 }
 
@@ -62,7 +71,7 @@ void SegAccuracyLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
   int top_k = 1;  // only support for top_k = 1
 
   // remove old predictions if exists
-  confusion_matrix_.clear();  
+  //confusion_matrix_.clear();  
 
   for (int i = 0; i < num; ++i) {
     for (int h = 0; h < height; ++h) {
@@ -104,6 +113,23 @@ void SegAccuracyLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
   top[0]->mutable_cpu_data()[2] = (Dtype)confusion_matrix_.avgPrecision();
   top[0]->mutable_cpu_data()[3] = (Dtype)confusion_matrix_.avgJaccard();
 
+  current_iteration_++;
+
+  if (current_iteration_ == save_freq_)
+  {
+  	std::ofstream out(file_name_.c_str());
+  	for (int i = 0; i < confusion_matrix_.numRows(); i++)
+	{
+		for (int j = 0; j < confusion_matrix_.numCols(); j++)
+		{
+			out << confusion_matrix_(i, j) << " ";
+		}
+
+		out << std::endl;
+	}
+
+	out.close();
+  }
   //LOG(INFO) << "Pixel accuracy: " << (float)confusion_matrix_.accuracy();
   //LOG(INFO) << "Class accuracy: " << (float)confusion_matrix_.avgRecall(false);
   //LOG(INFO) << "      PixelIOU: " << (float)confusion_matrix_.avgJaccard();

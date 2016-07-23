@@ -76,6 +76,9 @@ class SegAccuracyLayer : public Layer<Dtype> {
   }
       
   ConfusionMatrix confusion_matrix_;
+  string file_name_;
+  int current_iteration_;
+  int save_freq_;
 
   // set of ignore labels
   std::set<int> ignore_label_;
