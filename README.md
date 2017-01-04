@@ -11,7 +11,7 @@ For the pretrained model, please download through https://goo.gl/DrOSZv
 
 If you have any problem, please feel free to contact us: lizhen36@hku.hk, ganyk@mail2.sysu.edu.cn
 
-Please cite our paper in your publications if it helps your research: 
+Please consult and consider citing the following papers if it is beneficial to your research: 
 
     @inproceedings{li2016lstm,
       title={LSTM-CF: Unifying Context Modeling and Fusion with LSTMs for RGB-D Scene Labeling},
