@@ -13,12 +13,13 @@ If you have any problem, please feel free to contact us: lizhen36@hku.hk, ganyk@
 
 Please cite our paper in your publications if it helps your research: 
 
-@inproceedings{li2016lstm,
-  title={LSTM-CF: Unifying Context Modeling and Fusion with LSTMs for RGB-D Scene Labeling},
-  author={Li, Zhen and Gan, Yukang and Liang, Xiaodan and Yu, Yizhou and Cheng, Hui and Lin, Liang},
-  booktitle={European Conference on Computer Vision},
-  pages={541--557},
-  year={2016},
-  organization={Springer}
-}
+    @inproceedings{li2016lstm,
+      title={LSTM-CF: Unifying Context Modeling and Fusion with LSTMs for RGB-D Scene Labeling},
+      author={Li, Zhen and Gan, Yukang and Liang, Xiaodan and Yu, Yizhou and Cheng, Hui and Lin, Liang},
+      booktitle={European Conference on Computer Vision},
+      url={http://i.cs.hku.hk/~yzyu/publication/LSTMcf-eccv2016.pdf},
+      pages={541--557},
+      year={2016},
+      organization={Springer}
+    }
 
