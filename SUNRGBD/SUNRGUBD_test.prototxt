@@ -6,8 +6,8 @@ layer {
   top: "data"
   top: "label"
   image_data_param {
-    root_folder: "/home/ganyk/"
-    source: "/home/ganyk/SUNRGBD/NYU_list_train.txt"
+    root_folder: ""
+    source: "/home/xu/SUNRGBD/list_train.txt"
     label_type: PIXEL
     batch_size: 1
     shuffle: false
@@ -27,8 +27,8 @@ layer {
   top: "data"
   top: "label"
   image_data_param {
-    root_folder: "/home/ganyk/"
-    source: "/home/ganyk/SUNRGBD/NYU_list_test.txt"
+    root_folder: ""
+    source: "/home/xu/SUNRGBD/list_test.txt"
     label_type: PIXEL
     batch_size: 1
     shuffle: false
@@ -52,8 +52,8 @@ layer {
   top: "HHAData"
   #top: "label1"
   image_data_param {
-    root_folder: "/home/ganyk/"
-    source: "/home/ganyk/SUNRGBD/NYU_HHA_list_train.txt"
+    root_folder: ""
+    source: "/home/xu/SUNRGBD/list2_train.txt"
     label_type: NONE
     batch_size: 1
     shuffle: false
@@ -74,8 +74,8 @@ layer {
   top: "HHAData"
   #top: "label2"
   image_data_param {
-    root_folder: "/home/ganyk/"
-    source: "/home/ganyk/SUNRGBD/NYU_HHA_list_test.txt"
+    root_folder: ""
+    source: "/home/xu/SUNRGBD/list2_test.txt"
     label_type: NONE
     batch_size: 1
     shuffle: false
