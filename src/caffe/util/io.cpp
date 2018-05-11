@@ -114,6 +114,18 @@ cv::Mat ReadImageToCVMat(const string& filename,
 cv::Mat ReadImageToCVMat(const string& filename) {
   return ReadImageToCVMat(filename, 0, 0, true, 0, 0);
 }
+
+
+cv::Mat ReadImageToOriginalMat(const string& filename)
+{
+	cv::Mat cv_seg;
+	cv_seg = cv::imread(filename, CV_LOAD_IMAGE_ANYDEPTH);
+	return cv_seg;
+	
+
+}
+
+
 // Do the file extension and encoding match?
 static bool matchExt(const std::string & fn,
                      std::string en) {

@@ -222,6 +222,7 @@ class Blob {
 
   const Dtype* cpu_data() const;
   void set_cpu_data(Dtype* data);
+  const int* gpu_shape() const;
   const Dtype* gpu_data() const;
   const Dtype* cpu_diff() const;
   const Dtype* gpu_diff() const;
@@ -229,6 +230,26 @@ class Blob {
   Dtype* mutable_gpu_data();
   Dtype* mutable_cpu_diff();
   Dtype* mutable_gpu_diff();
+  
+  // jay add
+  const Dtype* cpu_data_at(const int n = 0, const int c = 0,
+			   const int h = 0, const int w = 0) const;
+  const Dtype* gpu_data_at(const int n = 0, const int c = 0,
+			   const int h = 0, const int w = 0) const;
+  const Dtype* cpu_diff_at(const int n = 0, const int c = 0,
+			   const int h = 0, const int w = 0) const;
+  const Dtype* gpu_diff_at(const int n = 0, const int c = 0,
+			   const int h = 0, const int w = 0) const;
+  Dtype* mutable_cpu_data_at(const int n = 0, const int c = 0,
+			     const int h = 0, const int w = 0);
+  Dtype* mutable_gpu_data_at(const int n = 0, const int c = 0,
+			     const int h = 0, const int w = 0);
+  Dtype* mutable_cpu_diff_at(const int n = 0, const int c = 0,
+			     const int h = 0, const int w = 0);
+  Dtype* mutable_gpu_diff_at(const int n = 0, const int c = 0,
+			     const int h = 0, const int w = 0);
+  // end jay add
+  
   void Update();
   void FromProto(const BlobProto& proto, bool reshape = true);
   void ToProto(BlobProto* proto, bool write_diff = false) const;
@@ -271,6 +292,7 @@ class Blob {
  protected:
   shared_ptr<SyncedMemory> data_;
   shared_ptr<SyncedMemory> diff_;
+  shared_ptr<SyncedMemory> shape_data_;
   vector<int> shape_;
   int count_;
   int capacity_;

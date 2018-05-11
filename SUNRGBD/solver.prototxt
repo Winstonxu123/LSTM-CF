@@ -1,4 +1,4 @@
-net: "/home/xu/myWorkspace/LSTM-CF/SUNRGBD/SUNRGUBD_test.prototxt"
+net: "/home/xu/myWorkspace/LSTM-CF/SUNRGBD/SUN2_test.prototxt"
 
 # covering the full 10,000 testing images.
 #test_iter: 5050
@@ -6,16 +6,16 @@ net: "/home/xu/myWorkspace/LSTM-CF/SUNRGBD/SUNRGUBD_test.prototxt"
 # Carry out testing every 500 training iterations.
 #test_interval: 10000
 #test_interval:150
-base_lr: 1e-3
+base_lr: 1e-5 #1e-3
 lr_policy: "step"
 gamma: 0.1
 
-stepsize: 20000
+stepsize: 500 #20000
 display: 1
 max_iter: 100000
 momentum: 0.9
 weight_decay: 0.0005
 
-snapshot: 20
-snapshot_prefix: "/home/xu/myWorkspace/LSTM-CF/SUNRGBD/model"
+snapshot: 50
+snapshot_prefix: "/home/xu/myWorkspace/LSTM-CF/SUNRGBD/model/model"
 solver_mode: CPU

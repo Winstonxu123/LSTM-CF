@@ -29,4 +29,4 @@ void col2im_gpu(const Dtype* data_col, const int channels,
 
 }  // namespace caffe
 
-#endif  // CAFFE_UTIL_IM2COL_HPP_
+#endif // CAFFE_UTIL_IM2COL_HPP_

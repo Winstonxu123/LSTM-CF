@@ -170,8 +170,7 @@ void ImageSegDataLayer<Dtype>::InternalThreadEntry() {
     CHECK_GT(lines_size, lines_id_);
 
     //int img_row, img_col;
-    cv_img_seg.push_back(ReadImageToCVMat(root_folder + lines_[lines_id_].first,
-	  new_height, new_width, is_color));
+    cv_img_seg.push_back(ReadImageToCVMat(root_folder + lines_[lines_id_].first,new_height, new_width, is_color));
 
     //LOG(INFO) << "load img: " << lines_[lines_id_].first;
 
@@ -182,8 +181,7 @@ void ImageSegDataLayer<Dtype>::InternalThreadEntry() {
       DLOG(INFO) << "Fail to load img: " << root_folder + lines_[lines_id_].first;
     }
     if (label_type == ImageDataParameter_LabelType_PIXEL) {
-      cv_img_seg.push_back(ReadImageToCVMat(root_folder + lines_[lines_id_].second,
-					    new_height, new_width, false));
+      cv_img_seg.push_back(ReadImageToOriginalMat(root_folder + lines_[lines_id_].second));
       if (!cv_img_seg[1].data) {
 	       DLOG(INFO) << "Fail to load seg: " << root_folder + lines_[lines_id_].second;
       }
