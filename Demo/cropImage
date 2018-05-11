@@ -1,0 +1,7 @@
+import matplotlib.pyplot as plt
+gt_name = 'gt/img_0063.jpg'
+gt=plt.imread(gt_name)
+gtImage=img_middle_crop(gt)
+plt.imshow(gtImage)
+plt.imsave('gt/img_0063.png',gtImage)
+plt.show()
