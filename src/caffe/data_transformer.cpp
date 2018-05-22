@@ -333,7 +333,7 @@ void DataTransformer<Dtype>::TransformImgAndSeg(const std::vector<cv::Mat>& cv_i
   CHECK_EQ(data_width, label_width);
 
   CHECK(cv_img_seg[0].depth() == CV_8U) << "Image data type must be unsigned byte";
-  //CHECK(cv_img_seg[1].depth() == CV_8U) << "Seg data type must be unsigned byte";
+  CHECK(cv_img_seg[1].depth() == CV_16U) << "Seg data type must be unsigned byte";
 
   const int crop_size = param_.crop_size();
   const Dtype scale = param_.scale();
@@ -414,11 +414,11 @@ void DataTransformer<Dtype>::TransformImgAndSeg(const std::vector<cv::Mat>& cv_i
 
   int top_index;
   const double* data_ptr;
-  const uchar* label_ptr;
+  const unsigned short* label_ptr;
 
   for (int h = 0; h < data_height; ++h) {
     data_ptr = cv_cropped_img.ptr<double>(h);
-    label_ptr = cv_cropped_seg.ptr<uchar>(h);
+    label_ptr = cv_cropped_seg.ptr<unsigned short>(h);
 
     int data_index = 0;
     int label_index = 0;
